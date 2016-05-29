@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  UIButton+BackgroundColor.h
 //  Sound Recorder
 //
 //  Created by Lukasz Komorowski on 29.05.2016.
@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface UIButton (BackgroundColor)
 
+- (void)setBackgroundColor:(UIColor *)color forState:(UIControlState)state;
 
 @end
-
