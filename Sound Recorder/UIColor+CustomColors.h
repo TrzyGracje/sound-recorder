@@ -15,5 +15,6 @@
 + (UIColor *)santasGrayColor;
 + (UIColor *)dullRedColor;
 + (UIColor *)redOrangeColor;
++ (UIColor *)troutColor;
 
 @end

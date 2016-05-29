@@ -31,4 +31,8 @@
     return [UIColor colorWithHex:@"FF3B30"];
 }
 
++ (UIColor *)troutColor {
+    return [UIColor colorWithHex:@"4E535F"];
+}
+
 @end
