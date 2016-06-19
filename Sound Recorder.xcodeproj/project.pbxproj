@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		097C0A4F9C2DD699AF4D77F2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88DE0D33192695E05BA879BE /* libPods.a */; };
+		C926C7381D17054B00BFA29B /* SRRecordingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C926C7371D17054B00BFA29B /* SRRecordingHelper.m */; };
 		C961ACD51CFB61AA0003C69F /* UIButton+BackgroundColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C961ACD41CFB61AA0003C69F /* UIButton+BackgroundColor.m */; };
 		C9DC296A1CFB366A00003556 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DC29691CFB366A00003556 /* main.m */; };
 		C9DC296D1CFB366A00003556 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DC296C1CFB366A00003556 /* AppDelegate.m */; };
@@ -22,6 +23,8 @@
 /* Begin PBXFileReference section */
 		089480DAD94A4852FF1BFE5C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		88DE0D33192695E05BA879BE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C926C7361D17054B00BFA29B /* SRRecordingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecordingHelper.h; sourceTree = "<group>"; };
+		C926C7371D17054B00BFA29B /* SRRecordingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecordingHelper.m; sourceTree = "<group>"; };
 		C961ACD31CFB61AA0003C69F /* UIButton+BackgroundColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+BackgroundColor.h"; sourceTree = "<group>"; };
 		C961ACD41CFB61AA0003C69F /* UIButton+BackgroundColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+BackgroundColor.m"; sourceTree = "<group>"; };
 		C9DC29651CFB366A00003556 /* Sound Recorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sound Recorder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,6 +71,19 @@
 				88DE0D33192695E05BA879BE /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C926C7351D1704F900BFA29B /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				C9DC29881CFB3D5700003556 /* UIView+Shortcuts.h */,
+				C9DC29891CFB3D5700003556 /* UIView+Shortcuts.m */,
+				C9DC298B1CFB430C00003556 /* UIColor+CustomColors.h */,
+				C9DC298C1CFB430C00003556 /* UIColor+CustomColors.m */,
+				C961ACD31CFB61AA0003C69F /* UIButton+BackgroundColor.h */,
+				C961ACD41CFB61AA0003C69F /* UIButton+BackgroundColor.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 		C9DC295C1CFB366A00003556 = {
@@ -148,12 +164,9 @@
 		C9DC29871CFB3D0100003556 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				C9DC29881CFB3D5700003556 /* UIView+Shortcuts.h */,
-				C9DC29891CFB3D5700003556 /* UIView+Shortcuts.m */,
-				C9DC298B1CFB430C00003556 /* UIColor+CustomColors.h */,
-				C9DC298C1CFB430C00003556 /* UIColor+CustomColors.m */,
-				C961ACD31CFB61AA0003C69F /* UIButton+BackgroundColor.h */,
-				C961ACD41CFB61AA0003C69F /* UIButton+BackgroundColor.m */,
+				C926C7351D1704F900BFA29B /* Categories */,
+				C926C7361D17054B00BFA29B /* SRRecordingHelper.h */,
+				C926C7371D17054B00BFA29B /* SRRecordingHelper.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -192,6 +205,11 @@
 				TargetAttributes = {
 					C9DC29641CFB366A00003556 = {
 						CreatedOnToolsVersion = 7.3.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -282,6 +300,7 @@
 				C9DC298A1CFB3D5700003556 /* UIView+Shortcuts.m in Sources */,
 				C961ACD51CFB61AA0003C69F /* UIButton+BackgroundColor.m in Sources */,
 				C9DC29841CFB3AEC00003556 /* SRMainViewController.m in Sources */,
+				C926C7381D17054B00BFA29B /* SRRecordingHelper.m in Sources */,
 				C9DC298D1CFB430D00003556 /* UIColor+CustomColors.m in Sources */,
 				C9DC296D1CFB366A00003556 /* AppDelegate.m in Sources */,
 				C9DC296A1CFB366A00003556 /* main.m in Sources */,
