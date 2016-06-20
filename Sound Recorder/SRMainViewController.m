@@ -179,7 +179,8 @@ static int recordingDuration = 4;
     CFTimeInterval animationDuration = 0.3;
     [UIView animateWithDuration:animationDuration
         animations:^{
-          self.recordingExternalViewWidth.constant = MIN(self.view.width, self.view.height) / 1.5;
+          CGFloat divider = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 3 : 1.5;
+          self.recordingExternalViewWidth.constant = MIN(self.view.width, self.view.height) / divider;
           self.recordingInternalViewWidth.constant = 0;
           [self.view layoutIfNeeded];
 
