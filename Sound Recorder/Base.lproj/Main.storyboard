@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="MI6-XW-l8K">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -32,8 +32,8 @@
                                             <action selector="recordClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nn3-lT-ke1"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="p3w-ER-mq2">
-                                        <rect key="frame" x="46" y="21" width="58" height="108"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="p3w-ER-mq2">
+                                        <rect key="frame" x="46" y="30" width="58" height="90"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tpv-EM-GyI">
                                                 <rect key="frame" x="15" y="0.0" width="28" height="54"/>
@@ -42,31 +42,39 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sKp-YH-jtD">
-                                                <rect key="frame" x="0.0" y="54" width="58" height="54"/>
+                                                <rect key="frame" x="0.0" y="54" width="58" height="36"/>
                                                 <string key="text">seconds
 left</string>
-                                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.76078431372549016" green="0.76078431372549016" blue="0.76078431372549016" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                     </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="uploading" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FM4-dU-DrI">
+                                        <rect key="frame" x="35" y="65" width="80" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <color key="textColor" red="0.60784313725490191" green="0.65098039215686276" blue="0.69803921568627447" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="7rd-Ie-r4e" firstAttribute="centerY" secondItem="h1j-FJ-bzS" secondAttribute="centerY" id="6HG-lM-pBw"/>
                                     <constraint firstItem="p3w-ER-mq2" firstAttribute="centerX" secondItem="7rd-Ie-r4e" secondAttribute="centerX" id="6uV-pb-Qrr"/>
                                     <constraint firstAttribute="width" secondItem="h1j-FJ-bzS" secondAttribute="height" multiplier="1:1" id="Kbb-ur-k3P"/>
+                                    <constraint firstItem="FM4-dU-DrI" firstAttribute="centerX" secondItem="h1j-FJ-bzS" secondAttribute="centerX" id="aO7-XS-gJz"/>
                                     <constraint firstAttribute="width" constant="150" id="gD5-NK-Ov1"/>
                                     <constraint firstItem="7rd-Ie-r4e" firstAttribute="centerX" secondItem="h1j-FJ-bzS" secondAttribute="centerX" id="gaT-z1-Uxy"/>
+                                    <constraint firstItem="FM4-dU-DrI" firstAttribute="centerY" secondItem="h1j-FJ-bzS" secondAttribute="centerY" id="ke2-4T-AgB"/>
                                     <constraint firstItem="p3w-ER-mq2" firstAttribute="centerY" secondItem="7rd-Ie-r4e" secondAttribute="centerY" id="pHa-4k-QTM"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oky-nX-pvF">
-                                <rect key="frame" x="255" y="390" width="90" height="36"/>
+                                <rect key="frame" x="255" y="390" width="91" height="36"/>
                                 <string key="text">press to start
 recording</string>
-                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" red="0.76078431369999999" green="0.76078431369999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -86,32 +94,14 @@ recording</string>
                         <outlet property="recordingExternalViewWidth" destination="gD5-NK-Ov1" id="eH6-1p-0zu"/>
                         <outlet property="recordingInternalView" destination="7rd-Ie-r4e" id="s1L-Te-Iuv"/>
                         <outlet property="recordingInternalViewWidth" destination="4xs-es-W2M" id="kYY-qd-YFB"/>
-                        <outlet property="recordingViewVerticalMargin" destination="eOb-53-Ama" id="R7X-O0-Z9P"/>
                         <outlet property="timeLeftStackView" destination="p3w-ER-mq2" id="hXn-ie-R3J"/>
                         <outlet property="timeLeftValueLabel" destination="Tpv-EM-GyI" id="Ycs-e6-Xhi"/>
+                        <outlet property="uploadingLabel" destination="FM4-dU-DrI" id="FcU-wu-hVZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1059" y="1109"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="9tV-7L-mY4">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="MI6-XW-l8K" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="mOv-qM-PHi">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="YK2-Qq-zVs"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KSd-OZ-7i3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="299" y="1109"/>
         </scene>
     </scenes>
 </document>

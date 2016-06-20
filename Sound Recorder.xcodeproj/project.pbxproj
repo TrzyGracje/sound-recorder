@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		097C0A4F9C2DD699AF4D77F2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88DE0D33192695E05BA879BE /* libPods.a */; };
 		C926C7381D17054B00BFA29B /* SRRecordingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C926C7371D17054B00BFA29B /* SRRecordingHelper.m */; };
+		C926C7611D172C2100BFA29B /* SRStorageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C926C7601D172C2100BFA29B /* SRStorageHelper.m */; };
 		C961ACD51CFB61AA0003C69F /* UIButton+BackgroundColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C961ACD41CFB61AA0003C69F /* UIButton+BackgroundColor.m */; };
 		C9DC296A1CFB366A00003556 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DC29691CFB366A00003556 /* main.m */; };
 		C9DC296D1CFB366A00003556 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DC296C1CFB366A00003556 /* AppDelegate.m */; };
@@ -25,6 +26,8 @@
 		88DE0D33192695E05BA879BE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C926C7361D17054B00BFA29B /* SRRecordingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecordingHelper.h; sourceTree = "<group>"; };
 		C926C7371D17054B00BFA29B /* SRRecordingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecordingHelper.m; sourceTree = "<group>"; };
+		C926C75F1D172C2100BFA29B /* SRStorageHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRStorageHelper.h; sourceTree = "<group>"; };
+		C926C7601D172C2100BFA29B /* SRStorageHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRStorageHelper.m; sourceTree = "<group>"; };
 		C961ACD31CFB61AA0003C69F /* UIButton+BackgroundColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+BackgroundColor.h"; sourceTree = "<group>"; };
 		C961ACD41CFB61AA0003C69F /* UIButton+BackgroundColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+BackgroundColor.m"; sourceTree = "<group>"; };
 		C9DC29651CFB366A00003556 /* Sound Recorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sound Recorder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,6 +170,8 @@
 				C926C7351D1704F900BFA29B /* Categories */,
 				C926C7361D17054B00BFA29B /* SRRecordingHelper.h */,
 				C926C7371D17054B00BFA29B /* SRRecordingHelper.m */,
+				C926C75F1D172C2100BFA29B /* SRStorageHelper.h */,
+				C926C7601D172C2100BFA29B /* SRStorageHelper.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -303,6 +308,7 @@
 				C926C7381D17054B00BFA29B /* SRRecordingHelper.m in Sources */,
 				C9DC298D1CFB430D00003556 /* UIColor+CustomColors.m in Sources */,
 				C9DC296D1CFB366A00003556 /* AppDelegate.m in Sources */,
+				C926C7611D172C2100BFA29B /* SRStorageHelper.m in Sources */,
 				C9DC296A1CFB366A00003556 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

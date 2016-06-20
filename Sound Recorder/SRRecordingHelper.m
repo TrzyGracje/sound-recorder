@@ -8,11 +8,12 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "SRRecordingHelper.h"
+#import "SRStorageHelper.h"
 
-@interface SRRecordingHelper ()<AVAudioRecorderDelegate, AVAudioPlayerDelegate> //
+@interface SRRecordingHelper ()<AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
 @property (strong, nonatomic) AVAudioRecorder *recorder;
-@property (strong, nonatomic) AVAudioPlayer *player; //
+@property (strong, nonatomic) AVAudioPlayer *player;
 
 @end
 
@@ -27,19 +28,15 @@
     return sharedInstance;
 }
 
-- (void)setupRecording {
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil]; //
+- (void)setup {
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
 
-    NSArray *pathComponents = @[
-        [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-        @"tmpFile.m4a"
-    ];
-    NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
     NSDictionary *recordSettings = @{ AVFormatIDKey : @(kAudioFormatMPEG4AAC),
                                       AVSampleRateKey : @(44100),
                                       AVNumberOfChannelsKey : @(2) };
 
-    self.recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSettings error:nil];
+    NSURL *fileURL = [SRStorageHelper sharedInstance].fileURL;
+    self.recorder = [[AVAudioRecorder alloc] initWithURL:fileURL settings:recordSettings error:nil];
     self.recorder.delegate = self;
     self.recorder.meteringEnabled = YES;
     [self.recorder prepareToRecord];
@@ -55,11 +52,12 @@
 - (void)stopRecording {
     if (self.recorder.recording == YES) {
         [self.recorder stop];
-        [[AVAudioSession sharedInstance] setActive:NO error:nil];
+        NSLog(@"stop");
     }
 }
 
-- (void)play { //
+// for testing purposes only
+- (void)play {
     if (self.recorder.recording == NO) {
         self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:self.recorder.url error:nil];
         [self.player setDelegate:self];
@@ -70,10 +68,9 @@
 #pragma mark - delegates
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)avrecorder successfully:(BOOL)flag {
-    [self play];
-}
-
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+    NSLog(@"stopped");
+    [self.delegate audioRecorderDidFinishRecording];
+    [[AVAudioSession sharedInstance] setActive:NO error:nil];
 }
 
 @end

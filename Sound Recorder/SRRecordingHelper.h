@@ -8,13 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol SRRecordinghelperDelegate
+- (void)audioRecorderDidFinishRecording;
+@end
+
 @interface SRRecordingHelper : NSObject
 
 + (instancetype)sharedInstance;
+@property (nonatomic, weak) id<SRRecordinghelperDelegate> delegate;
 
-- (void)setupRecording;
+- (void)setup;
 - (void)startRecording;
 - (void)stopRecording;
-- (void)play; //
+- (void)play; // for testing purposes only
 
 @end

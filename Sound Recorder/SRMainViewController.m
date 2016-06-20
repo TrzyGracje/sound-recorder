@@ -8,29 +8,30 @@
 
 #import "SRMainViewController.h"
 #import "SRRecordingHelper.h"
+#import "SRStorageHelper.h"
+#import "SRStorageHelper.h"
 #import "UIButton+BackgroundColor.h"
 #import "UIColor+CustomColors.h"
 #import "UIView+Shortcuts.h"
 
-static int recordingDuration = 20;
+static int recordingDuration = 4;
 
-@interface SRMainViewController ()
+@interface SRMainViewController ()<SRRecordinghelperDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *recordingExternalView;
 @property (weak, nonatomic) IBOutlet UIButton *recordingInternalView;
 @property (weak, nonatomic) IBOutlet UIStackView *timeLeftStackView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLeftValueLabel;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *uploadingLabel;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *recordingExternalViewWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *recordingInternalViewWidth;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *recordingViewVerticalMargin;
 
 @property (strong, nonatomic) NSTimer *timeLeftTimer;
 @property (strong, nonatomic) NSDate *startDate;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 
-@property (strong, nonatomic) NSDate *benchmarking;
 @property (strong, nonatomic) SRRecordingHelper *recordingHelper;
 
 @end
@@ -40,7 +41,7 @@ static int recordingDuration = 20;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
-    [self.recordingHelper setupRecording];
+    [self setupRecordingHelper];
 }
 
 - (void)dealloc {
@@ -51,10 +52,8 @@ static int recordingDuration = 20;
 
 - (void)setupUI {
     CGFloat recordingExternalViewTargetWidth = MIN(self.view.width, self.view.height) / 3.0;
-    CGFloat recordingViewRingBorderWidth = self.recordingExternalViewWidth.constant - self.recordingInternalViewWidth.constant;
-
     self.recordingExternalViewWidth.constant = recordingExternalViewTargetWidth;
-    self.recordingInternalViewWidth.constant = recordingExternalViewTargetWidth - recordingViewRingBorderWidth;
+    self.recordingInternalViewWidth.constant = recordingExternalViewTargetWidth - 10; // 10 is the margin between internal and external view
     [self.view.subviews makeObjectsPerformSelector:@selector(layoutIfNeeded)];
 
     self.recordingExternalView.layer.cornerRadius = self.recordingExternalViewWidth.constant / 2.0;
@@ -65,15 +64,34 @@ static int recordingDuration = 20;
     [self.recordingInternalView setBackgroundColor:[UIColor redOrangeColor] forState:UIControlStateNormal];
 
     self.timeLeftStackView.alpha = 0.0;
+    self.uploadingLabel.alpha = 0.0;
 
     NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     numberFormatter.maximumFractionDigits = 1;
     numberFormatter.minimumFractionDigits = 1;
+    numberFormatter.decimalSeparator = @".";
     self.timeLeftValueLabel.text = [numberFormatter stringFromNumber:@(recordingDuration)];
 }
 
+- (void)restoreInitialUIState {
+    [self.uploadingLabel.layer removeAllAnimations];
+    [self setupUI];
+    [UIView animateWithDuration:3
+                     animations:^{
+                       self.recordingInternalView.alpha = 1.0;
+                       self.infoLabel.alpha = 1.0;
+                       self.timeLeftStackView.alpha = 0.0;
+                     }
+                     completion:nil];
+}
+
 #pragma mark - recording
+
+- (void)setupRecordingHelper {
+    self.recordingHelper.delegate = self;
+    [self.recordingHelper setup];
+}
 
 - (void)startRecording {
     [self.recordingHelper startRecording];
@@ -85,11 +103,23 @@ static int recordingDuration = 20;
     [self.recordingHelper stopRecording];
 }
 
+- (void)audioRecorderDidFinishRecording {
+    [self showUploadingLabelWithCompletion:^{
+      [self firePulseAnimation];
+      [[SRStorageHelper sharedInstance]
+          uploadFileWithSuccess:^{
+            [self restoreInitialUIState];
+          }
+          failure:^(NSError *error) {
+            [self restoreInitialUIState];
+          }];
+    }];
+}
+
 #pragma timer
 
 - (void)startTimer {
     [self stopTimer];
-
     self.startDate = [NSDate date];
     self.timeLeftTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                           target:self
@@ -103,13 +133,11 @@ static int recordingDuration = 20;
     NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:self.startDate];
     NSTimeInterval timeIntervalCountDown = recordingDuration - timeInterval;
     NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeIntervalCountDown];
-    NSLog(@"%.1f", timeIntervalCountDown);
     NSString *timeString = [self.dateFormatter stringFromDate:timerDate];
     self.timeLeftValueLabel.text = (timeIntervalCountDown <= 0) ? @"0.0" : timeString;
 
     if (timeIntervalCountDown <= 0) {
         [self stopRecording];
-        NSLog(@"Time: %f", -[self.benchmarking timeIntervalSinceNow]);
     }
 }
 
@@ -123,7 +151,6 @@ static int recordingDuration = 20;
 #pragma mark - actions
 
 - (IBAction)recordClicked:(UIButton *)sender {
-    self.benchmarking = [NSDate date];
     [self fireStartAnimation];
 }
 
@@ -143,7 +170,7 @@ static int recordingDuration = 20;
         }
         completion:^(BOOL finished) {
           self.recordingExternalView.layer.borderWidth = 0;
-          [self drawCircle];
+          [self fireProgressAnimation];
           [self startRecording];
         }];
 
@@ -154,10 +181,6 @@ static int recordingDuration = 20;
     [self animateChangeOfBorderWidth:1.5
                              forView:self.recordingExternalView
                         withDuration:animationDuration];
-
-    //    [self animateChangeOfBorderColor:[UIColor redOrangeColor]
-    //                             forView:self.recordingExternalView
-    //                        withDuration:animationDuration];
 
     [self animateChangeOfCornerRadius:0
                               forView:self.recordingInternalView
@@ -186,18 +209,7 @@ static int recordingDuration = 20;
     [view.layer addAnimation:animation forKey:@"borderWidth"];
 }
 
-//- (void)animateChangeOfBorderColor:(UIColor *)borderColor forView:(UIView *)view withDuration:(CFTimeInterval)duration {
-//    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"borderColor"];
-//    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//    animation.fromValue = (id)view.layer.borderColor;
-//    animation.toValue = (id)borderColor.CGColor;
-//    animation.duration = duration;
-//
-//    view.layer.borderColor = borderColor.CGColor;
-//    [view.layer addAnimation:animation forKey:@"borderColor"];
-//}
-
-- (void)drawCircle {
+- (void)fireProgressAnimation {
     CAShapeLayer *circle = [CAShapeLayer layer];
     CGFloat circleRadius = self.recordingExternalViewWidth.constant;
     CGRect circleLayerFrame = CGRectMake(0, 0, circleRadius, circleRadius);
@@ -209,20 +221,37 @@ static int recordingDuration = 20;
 
     [self.recordingExternalView.layer addSublayer:circle];
 
-    [CATransaction begin];
     CABasicAnimation *drawAnimation = [CABasicAnimation animationWithKeyPath:@"strokeStart"];
     drawAnimation.duration = recordingDuration;
     drawAnimation.repeatCount = 1.0;
-    drawAnimation.fromValue = [NSNumber numberWithFloat:0.0];
-    drawAnimation.toValue = [NSNumber numberWithFloat:1.0];
+    drawAnimation.fromValue = @(0);
+    drawAnimation.toValue = @(1);
     drawAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
 
-    [CATransaction setCompletionBlock:^{
-        //      stop recording ??
-    }];
+    [circle addAnimation:drawAnimation forKey:@"strokeStart"];
+}
 
-    [circle addAnimation:drawAnimation forKey:@"drawCircleAnimation"];
-    [CATransaction commit];
+- (void)showUploadingLabelWithCompletion:(void (^)())completionBlock {
+    [UIView animateWithDuration:0.6
+        animations:^{
+          self.timeLeftStackView.alpha = 0.0;
+        }
+        completion:^(BOOL finished) {
+          if (completionBlock) {
+              completionBlock();
+          }
+        }];
+}
+
+- (void)firePulseAnimation {
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    animation.duration = 1.0;
+    animation.repeatCount = HUGE_VALF;
+    animation.autoreverses = YES;
+    animation.fromValue = @(0);
+    animation.toValue = @(1);
+
+    [self.uploadingLabel.layer addAnimation:animation forKey:@"opacity"];
 }
 
 #pragma mark - getters / setters
