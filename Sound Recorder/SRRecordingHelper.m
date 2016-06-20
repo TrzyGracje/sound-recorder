@@ -52,7 +52,6 @@
 - (void)stopRecording {
     if (self.recorder.recording == YES) {
         [self.recorder stop];
-        NSLog(@"stop");
     }
 }
 
@@ -68,7 +67,6 @@
 #pragma mark - delegates
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)avrecorder successfully:(BOOL)flag {
-    NSLog(@"stopped");
     [self.delegate audioRecorderDidFinishRecording];
     [[AVAudioSession sharedInstance] setActive:NO error:nil];
 }

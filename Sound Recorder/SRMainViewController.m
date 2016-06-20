@@ -51,7 +51,8 @@ static int recordingDuration = 4;
 #pragma mark - UI
 
 - (void)setupUI {
-    CGFloat recordingExternalViewTargetWidth = MIN(self.view.width, self.view.height) / 3.0;
+    CGFloat divider = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 5.0 : 3.0;
+    CGFloat recordingExternalViewTargetWidth = MIN(self.view.width, self.view.height) / divider;
     self.recordingExternalViewWidth.constant = recordingExternalViewTargetWidth;
     self.recordingInternalViewWidth.constant = recordingExternalViewTargetWidth - 10; // 10 is the margin between internal and external view
     [self.view.subviews makeObjectsPerformSelector:@selector(layoutIfNeeded)];
@@ -77,7 +78,7 @@ static int recordingDuration = 4;
 - (void)restoreInitialUIState {
     [self.uploadingLabel.layer removeAllAnimations];
     [self setupUI];
-    [UIView animateWithDuration:3
+    [UIView animateWithDuration:1.0
                      animations:^{
                        self.recordingInternalView.alpha = 1.0;
                        self.infoLabel.alpha = 1.0;
@@ -94,26 +95,44 @@ static int recordingDuration = 4;
 }
 
 - (void)startRecording {
-    [self.recordingHelper startRecording];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+      [self.recordingHelper startRecording];
+    });
     [self startTimer];
 }
 
 - (void)stopRecording {
     [self stopTimer];
-    [self.recordingHelper stopRecording];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+      [self.recordingHelper stopRecording];
+    });
 }
 
 - (void)audioRecorderDidFinishRecording {
-    [self showUploadingLabelWithCompletion:^{
-      [self firePulseAnimation];
-      [[SRStorageHelper sharedInstance]
-          uploadFileWithSuccess:^{
-            [self restoreInitialUIState];
-          }
-          failure:^(NSError *error) {
-            [self restoreInitialUIState];
-          }];
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self showUploadingLabelWithCompletion:^{
+        [self firePulseAnimation];
+        [[SRStorageHelper sharedInstance]
+            uploadFileWithSuccess:^{
+              [self restoreInitialUIState];
+            }
+            failure:^(NSError *error) {
+              UIAlertController *alert = [UIAlertController
+                  alertControllerWithTitle:@"Uploading error"
+                                   message:error.localizedDescription
+                            preferredStyle:UIAlertControllerStyleAlert];
+
+              UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"ok"
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction *action) {
+                                                                 [self restoreInitialUIState];
+                                                               }];
+
+              [alert addAction:okAction];
+              [self presentViewController:alert animated:YES completion:nil];
+            }];
+      }];
+    });
 }
 
 #pragma timer
@@ -211,7 +230,7 @@ static int recordingDuration = 4;
 
 - (void)fireProgressAnimation {
     CAShapeLayer *circle = [CAShapeLayer layer];
-    CGFloat circleRadius = self.recordingExternalViewWidth.constant;
+    CGFloat circleRadius = self.recordingExternalView.frame.size.width;
     CGRect circleLayerFrame = CGRectMake(0, 0, circleRadius, circleRadius);
     circle.path = [UIBezierPath bezierPathWithRoundedRect:circleLayerFrame cornerRadius:circleRadius / 2.0].CGPath;
     circle.strokeColor = [UIColor santasGrayColor].CGColor;
@@ -232,14 +251,12 @@ static int recordingDuration = 4;
 }
 
 - (void)showUploadingLabelWithCompletion:(void (^)())completionBlock {
-    [UIView animateWithDuration:0.6
+    [UIView animateWithDuration:0.3
         animations:^{
           self.timeLeftStackView.alpha = 0.0;
         }
         completion:^(BOOL finished) {
-          if (completionBlock) {
-              completionBlock();
-          }
+          completionBlock();
         }];
 }
 
