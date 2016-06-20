@@ -14,7 +14,7 @@
 #import "UIColor+CustomColors.h"
 #import "UIView+Shortcuts.h"
 
-static int recordingDuration = 4;
+const int recordingDuration = 4;
 
 @interface SRMainViewController ()<SRRecordinghelperDelegate>
 
@@ -103,6 +103,9 @@ static int recordingDuration = 4;
 
 - (void)stopRecording {
     [self stopTimer];
+    [self showUploadingLabelWithCompletion:^{
+      [self firePulseAnimation];
+    }];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
       [self.recordingHelper stopRecording];
     });
@@ -110,28 +113,25 @@ static int recordingDuration = 4;
 
 - (void)audioRecorderDidFinishRecording {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self showUploadingLabelWithCompletion:^{
-        [self firePulseAnimation];
-        [[SRStorageHelper sharedInstance]
-            uploadFileWithSuccess:^{
-              [self restoreInitialUIState];
-            }
-            failure:^(NSError *error) {
-              UIAlertController *alert = [UIAlertController
-                  alertControllerWithTitle:@"Uploading error"
-                                   message:error.localizedDescription
-                            preferredStyle:UIAlertControllerStyleAlert];
+      [[SRStorageHelper sharedInstance]
+          uploadFileWithSuccess:^{
+            [self restoreInitialUIState];
+          }
+          failure:^(NSError *error) {
+            UIAlertController *alert = [UIAlertController
+                alertControllerWithTitle:@"Uploading error"
+                                 message:error.localizedDescription
+                          preferredStyle:UIAlertControllerStyleAlert];
 
-              UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"ok"
-                                                                 style:UIAlertActionStyleDefault
-                                                               handler:^(UIAlertAction *action) {
-                                                                 [self restoreInitialUIState];
-                                                               }];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"ok"
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *action) {
+                                                               [self restoreInitialUIState];
+                                                             }];
 
-              [alert addAction:okAction];
-              [self presentViewController:alert animated:YES completion:nil];
-            }];
-      }];
+            [alert addAction:okAction];
+            [self presentViewController:alert animated:YES completion:nil];
+          }];
     });
 }
 
@@ -156,6 +156,7 @@ static int recordingDuration = 4;
     self.timeLeftValueLabel.text = (timeIntervalCountDown <= 0) ? @"0.0" : timeString;
 
     if (timeIntervalCountDown <= 0) {
+        NSLog(@"stop recording");
         [self stopRecording];
     }
 }
@@ -164,6 +165,7 @@ static int recordingDuration = 4;
     if (self.timeLeftTimer) {
         [self.timeLeftTimer invalidate];
         self.timeLeftTimer = nil;
+        NSLog(@"timer stopped");
     }
 }
 
@@ -252,7 +254,7 @@ static int recordingDuration = 4;
 }
 
 - (void)showUploadingLabelWithCompletion:(void (^)())completionBlock {
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.6
         animations:^{
           self.timeLeftStackView.alpha = 0.0;
         }
